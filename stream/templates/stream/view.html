@@ -1,0 +1,62 @@
+{% extends 'main.html' %}
+{% block content %}
+<div class="container text-center">
+    <h1>Processing Video</h1>
+    <br>
+
+    <!-- <img class="rounded" id="liveImage" width="800" height="600"> -->
+    <div class="liveImage">
+        <div class="text-secondary text-center" role="status">
+        </div>
+        <img class="rounded" id="liveImage">
+    </div>  
+    <hr>
+    
+    <h5>To classify the cover type, specify the start duration to clip the video</h5>
+    <div class="d-grid gap-2">
+        <button class="btn btn-primary" id="sendTimestampButton" type="button">Button</button>
+    </div>
+</div>
+
+<br>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+        let videoPath = "{{ video_path }}";  // Use the video path from your Django template
+        let liveImage = document.getElementById("liveImage");
+
+        // Establish a WebSocket connection to your server
+        let wsProtocol = window.location.protocol === "https:" ? "wss" : "ws";
+        let wsURL = `${wsProtocol}://${window.location.host}/ws/video/${videoPath}/`;
+        let socket = new WebSocket(wsURL);
+        
+        socket.onopen = function (event) {
+            console.log('Websocket Connection established')
+        }
+        
+        socket.onmessage = function (event) {
+            let data = JSON.parse(event.data);
+            
+            console.log(data.timestamp);
+            // document.getElementById('sendTimestampButton').addEventListener('click', function () {
+            // //     // Send a message to the backend to request the timestamp
+            //     socket.send(JSON.stringify({'timestamp': data.timestamp}));
+            //     console.log('Timestamp: ', data.timestamp);
+            // });
+
+                
+                liveImage.src = "data:image/jpeg;base64," + data.frame_data;
+            } 
+
+        socket.onclose = function (event) {
+            console.log("WebSocket connection closed.");
+        };
+
+        socket.onerror = function (error) {
+            console.error("WebSocket error:", error);
+        };
+    });    
+</script>
+{% endblock content %}

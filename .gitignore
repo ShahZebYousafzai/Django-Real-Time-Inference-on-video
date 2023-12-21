@@ -1,0 +1,13 @@
+stream/database/config.py
+stream/database/sportsleague-8579a-firebase-adminsdk-worjw-528c584b50.json
+stream/scoreboard/config.py
+sportsleague/__pycache__
+stream/__pycache__
+stream/action/__pycache__
+stream/database/__pycache__
+stream/migrations/__pycache__
+stream/scoreboard/__pycache__
+stream/scoreboard/__pycache__
+videos
+db.sqlite3
+test.py
